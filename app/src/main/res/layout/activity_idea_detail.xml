@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Green background shape -->
+    <ImageView
+        android:id="@+id/top_background"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:src="@drawable/login_top_green"
+        android:scaleType="centerCrop"
+        android:contentDescription="Green Top Background" />
+
+    <!-- Main content scroll -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="60dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Top image inside a card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/idea_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Idea Image" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/idea_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pot Planter"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:padding="12dp"
+                android:background="@drawable/rounded_outline"
+                android:textColor="#333"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/idea_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Turn your used plastic bottle into a cute and useful plant pot..."
+                android:textSize="14sp"
+                android:textColor="#333"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Materials section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Materials"
+                android:textStyle="bold"
+                android:background="@drawable/tag_background"
+                android:padding="6dp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/idea_materials"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_outline"
+                android:padding="12dp"
+                android:text="• 1 medium-sized plastic bottle\n• Paint (optional)\n• Soil and a small plant"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Steps section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Steps"
+                android:textStyle="bold"
+                android:background="@drawable/tag_background"
+                android:padding="6dp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/idea_steps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_outline"
+                android:padding="12dp"
+                android:text="1. Cut the bottle...\n2. Paint it...\n3. Add soil..."
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Reference section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reference"
+                android:textStyle="bold"
+                android:background="@drawable/tag_background"
+                android:padding="6dp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/idea_reference"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_outline"
+                android:padding="12dp"
+                android:text="• https://www.example.com\n• https://youtu.be/example"
+                android:autoLink="web"
+                android:textSize="14sp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Upload button -->
+            <Button
+                android:id="@+id/upload_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload Your Creation &amp; Earn EXP!"
+                android:backgroundTint="@color/green_500"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Show off your recycled craft! Upload a photo of your plant pot and earn EXP points."
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textColor="#666" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Back button -->
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:padding="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_back"
+        android:contentDescription="Back"
+        app:tint="#000"
+        android:layout_gravity="top|start" />
+
+</FrameLayout>

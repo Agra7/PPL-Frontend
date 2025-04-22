@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- Top Section with green background and icons -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="240dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/login_top_green" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/menu_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_menu"
+                android:contentDescription="Menu" />
+
+            <ImageView
+                android:id="@+id/logo_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/becycle_logo"
+                android:contentDescription="BeCycle Logo" />
+
+            <ImageView
+                android:id="@+id/profile_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/sample_profile"
+                android:scaleType="centerCrop"
+                android:background="@drawable/circle_background"
+                android:padding="2dp"
+                android:contentDescription="Profile" />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <!-- The rest of the content, now below and slightly overlapping -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="-180dp"
+        android:padding="16dp"
+        android:clipToPadding="false">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp">
+
+            <ImageView
+                android:id="@+id/result_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:transitionName="shared_image"
+                android:contentDescription="Detected image" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/detected_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Plastic Bottle"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_outline"
+            android:textColor="#333" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Result"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textColor="#333" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/rounded_outline">
+
+        <!-- Tabs -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/rounded_outline"
+            android:padding="4dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tab_idea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Recycling Idea"
+                android:textAlignment="center"
+                android:padding="8dp"
+                android:background="@drawable/tab_selected"
+                android:textColor="#4CAF50" />
+
+            <TextView
+                android:id="@+id/tab_center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Find Recycling Center"
+                android:textAlignment="center"
+                android:padding="8dp"
+                android:textColor="#888" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/idea_list"
+            android:layout_width="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+

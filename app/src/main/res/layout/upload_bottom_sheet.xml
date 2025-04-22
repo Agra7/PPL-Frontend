@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/uploadSheetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_top_white"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <!-- ❌ Close button -->
+    <ImageView
+        android:id="@+id/close_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end"
+        android:src="@drawable/ic_close"
+        android:contentDescription="Close" />
+
+    <!-- 🟢 Initial Upload State -->
+    <LinearLayout
+        android:id="@+id/initialLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload Your Creation"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Proud of your recycled plant pot? Upload your creation here!"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="#666"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Whether it’s a photo, a video, or a tutorial link,\nshow the world how you turn waste into something wonderful.\nEarn EXP and help inspire eco-friendly habits in others!"
+            android:textAlignment="center"
+            android:textSize="13sp"
+            android:textColor="#666"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnAddOrCreate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+ Add or Create"
+            android:background="@drawable/rounded_border"
+            android:textColor="#000"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:enabled="false"
+            android:backgroundTint="@color/green_500"
+            android:textColor="#fff" />
+    </LinearLayout>
+
+    <!-- 🔘 Add/Create Selection (Upload File, Create Link) -->
+    <LinearLayout
+        android:id="@+id/addCreateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:id="@+id/btnUploadFile"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_upload"
+                android:contentDescription="Upload File" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upload File"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnCreateLink"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_link"
+                android:contentDescription="Create Link" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Link"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ✅ File Selected State -->
+    <LinearLayout
+        android:id="@+id/fileSelectedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/selectedFileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="potplanter.png"
+            android:textSize="14sp"
+            android:textColor="#000"
+            android:drawableLeft="@drawable/ic_file"
+            android:drawableRight="@drawable/ic_delete"
+            android:drawablePadding="8dp"
+            android:padding="8dp"
+            android:background="@drawable/rounded_outline"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnAddAnother"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+ Add or Create"
+            android:background="@drawable/rounded_border"
+            android:textColor="#000"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnSubmitFinal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:backgroundTint="@color/green_500"
+            android:textColor="#fff" />
+    </LinearLayout>
+
+</LinearLayout>

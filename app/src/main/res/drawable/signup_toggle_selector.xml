@@ -1,5 +1,6 @@
+<!-- res/drawable/signup_toggle_selector.xml -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true" android:drawable="@drawable/signup_toggle_selected"/>
-    <item android:state_selected="true" android:drawable="@drawable/signup_toggle_selected"/>
-    <item android:drawable="@drawable/signup_toggle_unselected"/>
+    <item android:state_selected="true" android:drawable="@drawable/signup_toggle_selected" />
+    <item android:drawable="@drawable/signup_toggle_unselected" />
 </selector>
+
