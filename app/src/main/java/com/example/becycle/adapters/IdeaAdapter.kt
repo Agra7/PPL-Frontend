@@ -1,4 +1,4 @@
-package com.example.becycle
+package com.example.becycle.adapters
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.becycle.items.Idea
+import com.example.becycle.R
+import com.example.becycle.activity.IdeaDetailActivity
 
 class IdeaAdapter(private val ideas: List<Idea>) :
     RecyclerView.Adapter<IdeaAdapter.IdeaViewHolder>() {

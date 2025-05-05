@@ -52,7 +52,7 @@
         </RelativeLayout>
     </FrameLayout>
 
-    <!-- Content overlapping the top section -->
+    <!-- Scrollable Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -66,89 +66,63 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
-
-                <ImageView
-                    android:id="@+id/result_image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:transitionName="shared_image"
-                    android:contentDescription="Detected image" />
-            </androidx.cardview.widget.CardView>
-
+            <!-- Page Title -->
             <TextView
-                android:id="@+id/detected_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Plastic Bottle"
-                android:textAlignment="center"
-                android:textSize="18sp"
+                android:text="History"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
+                android:textColor="#333333"
+                android:paddingBottom="12dp" />
+
+            <!-- Tab Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:background="@drawable/rounded_outline"
-                android:textColor="#333" />
+                android:padding="4dp"
+                android:gravity="center">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Result"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:textColor="#333" />
+                <TextView
+                    android:id="@+id/tab_scanned"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Scanning Activity"
+                    android:padding="8dp"
+                    android:textAlignment="center"
+                    android:background="@drawable/tab_selected"
+                    android:textColor="#4CAF50"
+                    android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/tab_recycling"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Recycling Activity"
+                    android:padding="8dp"
+                    android:textAlignment="center"
+                    android:textColor="#888888"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- History List -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_outline">
 
-                <!-- Tabs -->
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/history_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/rounded_outline"
-                    android:padding="4dp"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/tab_idea"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Recycling Idea"
-                        android:textAlignment="center"
-                        android:padding="8dp"
-                        android:background="@drawable/tab_selected"
-                        android:textColor="#4CAF50" />
-
-                    <TextView
-                        android:id="@+id/tab_center"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Find Recycling Center"
-                        android:textAlignment="center"
-                        android:padding="8dp"
-                        android:textColor="#888" />
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/idea_list"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="16dp"
-                    android:layout_height="wrap_content"/>
+                    android:nestedScrollingEnabled="false" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

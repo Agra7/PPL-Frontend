@@ -1,10 +1,11 @@
-package com.example.becycle
+package com.example.becycle.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.becycle.R
 
 class CenterAdapter(private val centers: List<String>) :
     RecyclerView.Adapter<CenterAdapter.CenterViewHolder>() {

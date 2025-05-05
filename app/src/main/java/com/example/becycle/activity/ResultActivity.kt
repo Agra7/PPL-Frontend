@@ -1,13 +1,16 @@
-package com.example.becycle
+package com.example.becycle.activity
 
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.becycle.adapters.CenterAdapter
+import com.example.becycle.items.Idea
+import com.example.becycle.adapters.IdeaAdapter
+import com.example.becycle.R
 import java.io.File
 
 class ResultActivity : BaseActivity() {
@@ -26,6 +29,8 @@ class ResultActivity : BaseActivity() {
 
         setContentView(R.layout.activity_result)
 
+        setupBottomNavIfNeeded()
+
         resultImage = findViewById(R.id.result_image_view)
         labelText = findViewById(R.id.detected_label)
         ideaList = findViewById(R.id.idea_list)
@@ -33,8 +38,17 @@ class ResultActivity : BaseActivity() {
         tabCenter = findViewById(R.id.tab_center)
 
         val imagePath = intent.getStringExtra("image_path")
+        val imageUri = intent.getStringExtra("image_uri")
+
         if (imagePath != null) {
-            Glide.with(this).load(File(imagePath)).into(resultImage)
+            Glide.with(this)
+                .load(File(imagePath))
+                .into(resultImage)
+            resultImage.transitionName = "shared_image"
+        } else if (imageUri != null) {
+            Glide.with(this)
+                .load(imageUri)
+                .into(resultImage)
             resultImage.transitionName = "shared_image"
         }
 

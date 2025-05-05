@@ -1,4 +1,4 @@
-package com.example.becycle
+package com.example.becycle.items
 
 import android.app.Activity
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.becycle.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class UploadBottomSheet : BottomSheetDialogFragment() {

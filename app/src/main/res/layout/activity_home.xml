@@ -106,76 +106,13 @@
             android:contentDescription="Scan"
             android:scaleType="centerInside" />
 
-        <!-- Bottom Navigation -->
-        <LinearLayout
-            android:id="@+id/bottom_nav"
+        <include
+            layout="@layout/bottom_navigation"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:background="#FFFFFF"
-            android:elevation="8dp">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_home"
-                    app:tint="@color/green" />
-                <TextView
-                    android:text="Home"
-                    android:textSize="12sp"
-                    android:textColor="@color/green"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_history"
-                    app:tint="#666666" />
-                <TextView
-                    android:text="History"
-                    android:textSize="12sp"
-                    android:textColor="#666666"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_article"
-                    app:tint="#666666" />
-                <TextView
-                    android:text="Article"
-                    android:textSize="12sp"
-                    android:textColor="#666666"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-        </LinearLayout>
 
     </RelativeLayout>
 

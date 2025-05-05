@@ -1,4 +1,4 @@
-package com.example.becycle
+package com.example.becycle.activity
 
 import android.Manifest
 import android.app.Activity
@@ -9,14 +9,13 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.ImageButton
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import com.example.becycle.R
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,6 +35,8 @@ class HomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        setupBottomNavIfNeeded()
 
         previewView = findViewById(R.id.camera_preview)
         scanButton = findViewById(R.id.button_scan)

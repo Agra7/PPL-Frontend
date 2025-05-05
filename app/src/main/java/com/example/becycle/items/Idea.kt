@@ -1,4 +1,4 @@
-package com.example.becycle
+package com.example.becycle.items
 
 data class Idea(
     val title: String,

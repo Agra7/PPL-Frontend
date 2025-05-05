@@ -9,7 +9,6 @@
     android:padding="24dp"
     android:gravity="center_horizontal">
 
-    <!-- ❌ Close button -->
     <ImageView
         android:id="@+id/close_button"
         android:layout_width="24dp"
@@ -18,7 +17,6 @@
         android:src="@drawable/ic_close"
         android:contentDescription="Close" />
 
-    <!-- 🟢 Initial Upload State -->
     <LinearLayout
         android:id="@+id/initialLayout"
         android:orientation="vertical"
@@ -73,7 +71,6 @@
             android:textColor="#fff" />
     </LinearLayout>
 
-    <!-- 🔘 Add/Create Selection (Upload File, Create Link) -->
     <LinearLayout
         android:id="@+id/addCreateLayout"
         android:layout_width="match_parent"
@@ -128,7 +125,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- ✅ File Selected State -->
     <LinearLayout
         android:id="@+id/fileSelectedLayout"
         android:layout_width="match_parent"

@@ -1,10 +1,12 @@
-package com.example.becycle
+package com.example.becycle.activity
 
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.example.becycle.R
+import com.example.becycle.items.UploadBottomSheet
 
 class IdeaDetailActivity : BaseActivity() {
 

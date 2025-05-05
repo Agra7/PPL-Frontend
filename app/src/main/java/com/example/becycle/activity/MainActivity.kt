@@ -1,4 +1,4 @@
-package com.example.becycle
+package com.example.becycle.activity
 
 import android.content.Intent
 import android.graphics.Color
@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.becycle.R
 
 class MainActivity : BaseActivity() {
 
