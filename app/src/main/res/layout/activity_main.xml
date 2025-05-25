@@ -141,6 +141,7 @@
                     android:layout_marginBottom="16dp">
 
                     <ImageButton
+                        android:id="@+id/google_login_button"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@null"
@@ -220,6 +221,7 @@
                     android:layout_marginBottom="16dp">
 
                     <ImageButton
+                        android:id="@+id/google_signup_button"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@null"

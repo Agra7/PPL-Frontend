@@ -24,6 +24,21 @@
         <activity android:name=".activity.IdeaDetailActivity" />
         <activity android:name=".activity.HistoryActivity" />
         <activity android:name=".activity.ArticleActivity" />
+        <activity android:name=".activity.EmailStatusActivity" />
+        <activity android:name=".activity.ResetPasswordActivity" />
+        <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:exported="true">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="project-ppl-production.up.railway.app"
+                    android:pathPrefix="/auth/reset-password" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".activity.MainActivity"

@@ -3,5 +3,5 @@ package com.example.becycle.items
 data class HistoryItem(
     val title: String,
     val date: String,
-    val imageResId: Int
+    val imageUrl: String
 )

@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.becycle.items.HistoryItem
+import com.bumptech.glide.Glide
 import com.example.becycle.R
+import com.example.becycle.items.HistoryItem
 
 class HistoryAdapter(private val items: List<HistoryItem>) :
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
@@ -26,11 +27,13 @@ class HistoryAdapter(private val items: List<HistoryItem>) :
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         val item = items[position]
-        holder.image.setImageResource(item.imageResId)
         holder.title.text = item.title
         holder.date.text = item.date
+        Glide.with(holder.image.context)
+            .load(item.imageUrl)
+            .placeholder(R.drawable.plant_placeholder)
+            .into(holder.image)
     }
 
     override fun getItemCount(): Int = items.size
 }
-
