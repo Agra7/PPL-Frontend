@@ -8,32 +8,43 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.becycle.R
-import com.example.becycle.items.HistoryItem
+import com.example.becycle.adapters.ArticleAdapter.LongArticleViewHolder
+import com.example.becycle.adapters.ArticleAdapter.ShortArticleViewHolder
+import com.example.becycle.data.local.entity.ArticleEntity
+import com.example.becycle.data.local.entity.HistoryEntity
 
-class HistoryAdapter(private val items: List<HistoryItem>) :
-    RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+class HistoryAdapter(
+    private var historyList: List<HistoryEntity>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val image: ImageView = itemView.findViewById(R.id.history_item_image)
-        val title: TextView = itemView.findViewById(R.id.history_item_title)
-        val date: TextView = itemView.findViewById(R.id.history_item_date)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder  {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_history, parent, false)
         return HistoryViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val item = items[position]
-        holder.title.text = item.title
-        holder.date.text = item.date
-        Glide.with(holder.image.context)
-            .load(item.imageUrl)
-            .placeholder(R.drawable.plant_placeholder)
-            .into(holder.image)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val history = historyList[position]
+        if (holder is HistoryViewHolder) {
+            holder.bind(history)
+        }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = historyList.size
+
+    fun updateHistory(newHistoryList: List<HistoryEntity>) {
+        this.historyList = newHistoryList
+        notifyDataSetChanged()
+    }
+
+    class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val itemDate: TextView = itemView.findViewById(R.id.history_item_date)
+        private val itemTitle: TextView = itemView.findViewById(R.id.history_item_title)
+//        private val itemImage: TextView = itemView.findViewById(R.id.history_item_image)
+        fun bind(history: HistoryEntity) {
+            itemDate.text = history.createdAt?: "-"
+            itemTitle.text = history.predictionResult?: "-"
+//            itemImage.text = history.imageUrl?: "-"
+        }
+    }
 }

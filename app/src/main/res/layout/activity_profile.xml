@@ -62,7 +62,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/profile_card_bg"
+
                 android:padding="16dp"
                 android:layout_marginTop="12dp"
                 android:elevation="2dp">
@@ -125,7 +125,7 @@
                     android:layout_marginTop="4dp"
                     android:progress="68"
                     android:max="100"
-                    android:progressDrawable="@drawable/progress_bar_green" />
+                    />
 
                 <Button
                     android:text="Edit Profile"
@@ -133,7 +133,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/edit_button_background"
                     android:textColor="#000000" />
             </LinearLayout>
 
@@ -197,7 +196,6 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/bottom_nav_background"
         android:weightSum="3">
 
         <LinearLayout

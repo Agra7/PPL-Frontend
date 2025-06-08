@@ -1,10 +1,12 @@
 package com.example.becycle.activity
 
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.transition.TransitionInflater
-import android.widget.*
+import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,8 +16,6 @@ import com.example.becycle.adapters.CenterAdapter
 import com.example.becycle.adapters.IdeaAdapter
 import com.example.becycle.items.Idea
 import com.example.becycle.model.HistoryRequest
-import com.example.becycle.model.HistoryResponse
-import com.example.becycle.model.ImageUploadResponse
 import com.example.becycle.network.ApiClient
 import com.example.becycle.network.HistoryService
 import kotlinx.coroutines.CoroutineScope
@@ -25,61 +25,71 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.Response
 import java.io.File
 import java.io.InputStream
-import java.io.OutputStream
+import java.text.NumberFormat
+import java.util.Locale
 
 class ResultActivity : BaseActivity() {
 
     private lateinit var resultImage: ImageView
     private lateinit var labelText: TextView
+    private lateinit var scoreText: TextView
     private lateinit var ideaList: RecyclerView
     private lateinit var tabIdea: TextView
     private lateinit var tabCenter: TextView
+    private lateinit var loadingOverlay: View
     private var userId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        window.sharedElementEnterTransition = TransitionInflater.from(this)
-            .inflateTransition(android.R.transition.move)
-
         setContentView(R.layout.activity_result)
+        Log.e("AnalyzeImage1121212", "Exception")
+        val imageUriString = intent.getStringExtra(EXTRA_IMAGE_URI)
+        val label = intent.getStringExtra(EXTRA_LABEL) ?: "Unknown"
+        val score = intent.getFloatExtra(EXTRA_SCORE, 0f)
 
-        // Get user ID from SharedPreferences
-        val sharedPref = getSharedPreferences("auth", MODE_PRIVATE)
-        userId = sharedPref.getString("user_id", null)?.toIntOrNull() ?: -1
-
-        setupBottomNavIfNeeded()
-
+        Log.e("AnalyzeImage1121212", "Exception")
+        // Initialize UI components
         resultImage = findViewById(R.id.result_image_view)
+        Log.e("AnalyzeImage11121212", "Exception")
         labelText = findViewById(R.id.detected_label)
+        Log.e("AnalyzeImage11121212", "Exception")
         ideaList = findViewById(R.id.idea_list)
+        Log.e("AnalyzeImage11121212", "Exception")
         tabIdea = findViewById(R.id.tab_idea)
+        Log.e("AnalyzeImage11121212", "Exception")
         tabCenter = findViewById(R.id.tab_center)
+        Log.e("AnalyzeImage11121212", "Exception")
+//        loadingOverlay = findViewById(R.id.loading_overlay)
+        Log.e("AnalyzeImage11121212", "Exception")
 
-        val imagePath = intent.getStringExtra("image_path")
-        val imageUri = intent.getStringExtra("image_uri")
-
-        if (imagePath != null) {
-            Glide.with(this)
-                .load(File(imagePath))
-                .into(resultImage)
-            resultImage.transitionName = "shared_image"
-        } else if (imageUri != null) {
+        Log.e("AnalyzeImage1121212", "Exception")
+        setupBottomNavIfNeeded()
+        Log.e("AnalyzeImage1121212", "Exception")
+//         Get user ID from SharedPreferences
+//        val sharedPref = getSharedPreferences("auth", MODE_PRIVATE)
+//        userId = sharedPref.getString("user_id", null)?.toIntOrNull() ?: -1
+        Log.e("AnalyzeImage1121212", "Exception")
+        // Display the results
+        if (imageUriString != null) {
+            val imageUri = Uri.parse(imageUriString)
             Glide.with(this)
                 .load(imageUri)
                 .into(resultImage)
-            resultImage.transitionName = "shared_image"
+
+            // Save to history automatically
+            saveToHistory(label, imageUri)
+        } else {
+            Toast.makeText(this, "No image received.", Toast.LENGTH_SHORT).show()
         }
 
-        // Set detected item label (you'll replace this with actual detection result)
-        val detectedItem = "Plastic Bottle"
-        labelText.text = detectedItem
+        labelText.text = label
+//        scoreText.text = NumberFormat.getPercentInstance(Locale.US).format(score)
 
+        // Setup RecyclerView and Tabs
         ideaList.layoutManager = LinearLayoutManager(this)
-        showIdeas()
+        showIdeas() // Default to ideas tab
 
         tabIdea.setOnClickListener {
             highlightTab(selected = tabIdea, other = tabCenter)
@@ -89,11 +99,6 @@ class ResultActivity : BaseActivity() {
         tabCenter.setOnClickListener {
             highlightTab(selected = tabCenter, other = tabIdea)
             showCenters()
-        }
-
-        // Save to history if we have an image URI
-        imageUri?.let { uri ->
-            saveToHistory(detectedItem, Uri.parse(uri))
         }
     }
 
@@ -106,12 +111,18 @@ class ResultActivity : BaseActivity() {
     }
 
     private fun saveToHistory(result: String, imageUri: Uri) {
+        if (userId == -1) {
+            Log.w("ResultActivity", "User not logged in, skipping history save.")
+            return
+        }
+
+        loadingOverlay.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // First upload the image to get a URL
+                // First, upload the image to get a URL
                 val imageUrl = uploadImage(imageUri)
 
-                // Then save to history
+                // Then, save the history item with the returned URL
                 val historyRequest = HistoryRequest(
                     user_id = userId,
                     image_url = imageUrl,
@@ -122,14 +133,18 @@ class ResultActivity : BaseActivity() {
                     .saveHistoryItem(historyRequest)
 
                 withContext(Dispatchers.Main) {
+                    loadingOverlay.visibility = View.GONE
                     if (response.isSuccessful) {
                         Toast.makeText(this@ResultActivity, "Saved to history", Toast.LENGTH_SHORT).show()
                     } else {
+                        Log.e("ResultActivity", "Failed to save history: ${response.errorBody()?.string()}")
                         Toast.makeText(this@ResultActivity, "Failed to save to history", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
+                    loadingOverlay.visibility = View.GONE
+                    Log.e("ResultActivity", "Exception in saveToHistory: ${e.message}")
                     Toast.makeText(this@ResultActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -138,33 +153,29 @@ class ResultActivity : BaseActivity() {
 
     private suspend fun uploadImage(uri: Uri): String {
         return withContext(Dispatchers.IO) {
-            // Create a temporary file
-            val inputStream: InputStream? = contentResolver.openInputStream(uri)
-            val file = File.createTempFile("upload_", ".jpg", cacheDir)
-
-            inputStream?.use { input ->
-                file.outputStream().use { output ->
-                    input.copyTo(output)
+            val tempFile = File.createTempFile("upload_", ".jpg", cacheDir)
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                tempFile.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
                 }
             }
 
-            // Create request body
-            val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
+            val requestFile = tempFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val body = MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
+            val response = ApiClient.retrofit.create(HistoryService::class.java).uploadImage(body)
 
-            // Call upload API
-            val response = ApiClient.retrofit.create(HistoryService::class.java)
-                .uploadImage(body)
+            tempFile.delete() // Clean up the temporary file
 
             if (response.isSuccessful) {
-                response.body()?.imageUrl ?: throw Exception("No image URL returned")
+                response.body()?.imageUrl ?: throw Exception("Image URL is null")
             } else {
-                throw Exception("Upload failed: ${response.message()}")
+                throw Exception("Image upload failed: ${response.message()}")
             }
         }
     }
 
     private fun showIdeas() {
+        // This data should ideally come from a ViewModel or a remote source based on the 'label'
         val ideas = listOf(
             Idea(
                 title = "Pot Planter",
@@ -185,12 +196,18 @@ class ResultActivity : BaseActivity() {
     }
 
     private fun showCenters() {
+        // This data should also come from a dynamic source
         val centers = listOf(
             "Pusat Daur Ulang Bandung (3.56 Km Away)\nJl. Buah Batu no.67 Kec. Gede Bage, 157368",
-            "Location 2\nJl. lorem ipsum no. 12 kec. lorem ipsum, 12345.",
-            "Location 3\nJl. lorem ipsum no. 12 kec. lorem ipsum, 12345.",
-            "Location 4\nJl. lorem ipsum no. 12 kec. lorem ipsum, 12345."
+            "Bank Sampah Bersinar (4.1 Km Away)\nJl. Terusan Buah Batu No.21",
+            "Pusat Daur Ulang Cimahi (15 Km Away)\nJl. Jend. H. Amir Machmud No.567",
         )
         ideaList.adapter = CenterAdapter(centers)
+    }
+
+    companion object {
+        const val EXTRA_IMAGE_URI = "extra_image_uri"
+        const val EXTRA_LABEL = "extra_label"
+        const val EXTRA_SCORE = "extra_score"
     }
 }

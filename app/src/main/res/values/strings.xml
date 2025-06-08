@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">becycle</string>
     <string name="close">Close</string>
+    <string name="image_classifier_failed">Image classifier failed to initialize. See error logs for details</string>
 </resources>

@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import com.dicoding.asclepius.models.ViewModelFactory
+import com.example.becycle.MyApplication
 import com.example.becycle.R
 import com.example.becycle.model.AuthResponse
+import com.example.becycle.model.models.MainViewModel
 import com.example.becycle.network.ApiClient
 import com.example.becycle.network.AuthService
 import com.example.becycle.network.LoginRequest
@@ -70,6 +74,10 @@ class MainActivity : BaseActivity() {
         signupPasswordInput = findViewById(R.id.password_signup)
         signupConfirmPasswordInput = findViewById(R.id.confirm_password)
 
+        // BUAT API (jangan diapus)
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
+        val viewModel: MainViewModel by viewModels { factory }
+
         // Google Sign-In buttons from your XML (make sure you added IDs to them)
         val googleLoginBtn = findViewById<ImageButton>(R.id.google_login_button)
         val googleSignupBtn = findViewById<ImageButton>(R.id.google_signup_button)
@@ -95,7 +103,8 @@ class MainActivity : BaseActivity() {
         }
 
         loginButton.setOnClickListener {
-            performLogin()
+//            performLogin()
+            startActivity(Intent(this@MainActivity, HomeActivity::class.java))
         }
 
         signupButton.setOnClickListener {

@@ -1,13 +1,20 @@
 package com.example.becycle.activity
 
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.becycle.items.Article
+import com.dicoding.asclepius.models.ViewModelFactory
 import com.example.becycle.adapters.ArticleAdapter
 import com.example.becycle.R
+import com.example.becycle.model.models.MainViewModel
+import com.example.becycle.data.misc.Result
 
 class ArticleActivity : BaseActivity() {
+
+    private var userId: String? = null
+    private var token: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,19 +26,37 @@ class ArticleActivity : BaseActivity() {
         val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.layoutManager = layoutManager
 
-        val articles = listOf(
-            Article(1, "Short Title 1", "Website", "Short desc", "01-01-2025, 10:00", false),
-            Article(2, "Long Title 2", "Website", "This is a long description with multiple lines...", "02-01-2025, 11:00", true),
-            Article(3, "Short Title 3", "Website", "Short desc", "03-01-2025, 12:00", false),
-            Article(4, "Long Title 4", "Website", "Another long article description here...", "04-01-2025, 13:00", true),
-            Article(5, "Short Title 5", "Website", "Short desc", "05-01-2025, 14:00", false),
-            Article(6, "Short Title 6", "Website", "Short desc", "06-01-2025, 15:00", false),
-            Article(7, "Long Title 7", "Website", "This is a long description with many sentences...", "07-01-2025, 16:00", true),
-            Article(8, "Short Title 8", "Website", "Short desc", "08-01-2025, 17:00", false),
-            Article(9, "Long Title 9", "Website", "A very long article description goes here...", "09-01-2025, 18:00", true),
-            Article(10, "Short Title 10", "Website", "Short desc", "10-01-2025, 19:00", false)
-        )
+        // Prepare the adapter with an empty list
+        val articleAdapter = ArticleAdapter(emptyList())
+        recyclerView.adapter = articleAdapter
 
-        recyclerView.adapter = ArticleAdapter(articles)
+        val sharedPref = getSharedPreferences("auth", MODE_PRIVATE)
+        userId = sharedPref.getString("user_id", null)
+        token = sharedPref.getString("token", null)
+
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
+        val viewModel: MainViewModel by viewModels { factory }
+
+        fetchArticle(viewModel, articleAdapter, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6ImFsdWNhcmRrYXJpbmE2MzVAZ21haWwuY29tIiwiaXNWZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzQ5MDk0MzMyLCJleHAiOjE3NDkwOTc5MzJ9.hyaFqqMcEB-YLczdbwlcp1ut_hBI7hmkm5sn3imxIns")
+    }
+
+    private fun fetchArticle(viewModel: MainViewModel, articleAdapter: ArticleAdapter, token: String) {
+        viewModel.getArticles(token).observe(this) { result ->
+            when (result) {
+                is Result.Success -> {
+                    Log.d("ArticleActivity", "articles successfully.")
+                    val articles = result.data
+                    articleAdapter.updateArticles(articles)
+                }
+                is Result.Error -> {
+                    // Handle error (show a message, etc)
+                    Log.e("ArticleActivity", "articles failed: ${result.error}")
+                }
+                is Result.Loading -> {
+                    // Show loading if needed
+                }
+                // Optionally handle other cases if you have them
+            }
+        }
     }
 }
