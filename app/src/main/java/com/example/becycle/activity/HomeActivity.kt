@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton // Import ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
@@ -19,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.example.becycle.R
 import com.example.becycle.helper.ImageClassifierHelper
+import com.example.becycle.utils.UserPreference
 import org.tensorflow.lite.task.vision.classifier.Classifications
 import java.io.File
 import java.text.SimpleDateFormat
@@ -34,6 +36,12 @@ class HomeActivity : BaseActivity() {
     private lateinit var loadingOverlay: View
     private lateinit var imageClassifierHelper: ImageClassifierHelper
 
+    // Flashlight specific variables
+    private lateinit var flashButton: ImageButton // Declare the ImageButton for flash
+    private var cameraControl: CameraControl? = null // To control camera features like torch
+    private var cameraInfo: CameraInfo? = null // To access camera capabilities like flash
+    private var isFlashOn: Boolean = false // To keep track of the current flash state
+
     private var imageCapture: ImageCapture? = null
     private var lensFacing = CameraSelector.LENS_FACING_BACK
 
@@ -41,15 +49,21 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Initialize UI components
+        userPreference = UserPreference(this)
+
+        // Initialize UI components (add flashButton here)
         previewView = findViewById(R.id.camera_preview)
         scanButton = findViewById(R.id.button_scan)
         switchCameraButton = findViewById(R.id.button_switch_camera)
         galleryButton = findViewById(R.id.button_gallery)
         loadingOverlay = findViewById(R.id.loading_overlay)
+        flashButton = findViewById(R.id.button_flash) // Initialize flash button
 
         setupBottomNavIfNeeded()
-        setupPermissions()
+        val isLoggedIn = userPreference.getAccessToken() != null
+        Log.d("HomeActivity", "User is logged in: $isLoggedIn")
+
+        setupPermissions() // This calls startCamera()
 
         outputDirectory = getOutputDirectory()
 
@@ -57,7 +71,9 @@ class HomeActivity : BaseActivity() {
         scanButton.setOnClickListener { takePhoto() }
         switchCameraButton.setOnClickListener { toggleCamera() }
         galleryButton.setOnClickListener { openGallery() }
+        flashButton.setOnClickListener { toggleFlashlight() } // Set listener for flash button
     }
+
 
     private fun setupPermissions() {
         if (allPermissionsGranted()) {
@@ -91,7 +107,26 @@ class HomeActivity : BaseActivity() {
 
             try {
                 cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+                // Get the Camera object when binding use cases
+                val camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+
+                // Store CameraControl and CameraInfo
+                cameraControl = camera.cameraControl
+                cameraInfo = camera.cameraInfo
+
+                // Observe torch state and update UI
+                cameraInfo?.getTorchState()?.observe(this) { torchState ->
+                    isFlashOn = torchState == TorchState.ON
+                    updateFlashlightButtonIcon() // Update icon based on current state
+                }
+
+                // Check if flash unit is available for the current camera
+                if (cameraInfo?.hasFlashUnit() == true) { // Use safe call and check for true
+                    flashButton.visibility = View.VISIBLE // Show button if flash exists
+                } else {
+                    flashButton.visibility = View.GONE // Hide if no flash unit
+                }
+
                 scanButton.isEnabled = true
                 hideLoading()
             } catch (exc: Exception) {
@@ -99,6 +134,33 @@ class HomeActivity : BaseActivity() {
                 Toast.makeText(this, "Failed to start camera.", Toast.LENGTH_SHORT).show()
             }
         }, ContextCompat.getMainExecutor(this))
+    }
+
+    // New function to toggle flashlight
+    private fun toggleFlashlight() {
+        cameraControl?.let { control ->
+            cameraInfo?.let { info ->
+                if (info.hasFlashUnit()) { // Double-check flash unit existence using cameraInfo
+                    isFlashOn = !isFlashOn
+                    control.enableTorch(isFlashOn) // Enable or disable torch using cameraControl
+                    updateFlashlightButtonIcon() // Update icon immediately
+                } else {
+                    Toast.makeText(this, "Flashlight is not available on this camera.", Toast.LENGTH_SHORT).show()
+                    flashButton.visibility = View.GONE // Hide if it somehow became visible without flash
+                }
+            }
+        } ?: run {
+            Toast.makeText(this, "Camera not ready.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // New function to update the flashlight button icon
+    private fun updateFlashlightButtonIcon() {
+        if (isFlashOn) {
+            flashButton.setImageResource(R.drawable.ic_flash_on) // You'll need this drawable
+        } else {
+            flashButton.setImageResource(R.drawable.ic_flash_off) // You'll need this drawable
+        }
     }
 
     private fun takePhoto() {
@@ -123,9 +185,8 @@ class HomeActivity : BaseActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    Log.e("AnalyzeImage", "Exception")
+                    Log.e("AnalyzeImage", "Image saved successfully, analyzing...")
                     analyzeImage(output.savedUri ?: photoFile.toUri())
-                    Log.e("AnalyzeImage", "Exception")
                 }
             }
         )
@@ -148,41 +209,41 @@ class HomeActivity : BaseActivity() {
 
     private fun analyzeImage(uri: Uri) {
         try {
+            Log.d("AnalyzeImage", "Starting image analysis for URI: $uri")
+            imageClassifierHelper = ImageClassifierHelper(
+                context = this,
+                classifierListener = object : ImageClassifierHelper.ClassifierListener {
+                    override fun onError(error: String) {
+                        runOnUiThread {
+                            hideLoading()
+                            Toast.makeText(this@HomeActivity, "Error: $error", Toast.LENGTH_SHORT).show()
+                            Log.e("AnalyzeImage", "Error during classification: $error")
+                        }
+                    }
 
-            Log.e("AnalyzeImage", "Exception")
-        imageClassifierHelper = ImageClassifierHelper(
-            context = this,
-            classifierListener = object : ImageClassifierHelper.ClassifierListener {
-                override fun onError(error: String) {
-//                    runOnUiThread {
-//                        hideLoading()
-//                        Toast.makeText(this@HomeActivity, "Error: $error", Toast.LENGTH_SHORT).show()
-//                    }
-                    Log.e("AnalyzeImage", "Exception")
-                }
-
-                override fun onResults(results: List<Classifications>?) {
-                    runOnUiThread {
-                        hideLoading()
-                        results?.let {
-                            val topResult = it.firstOrNull()?.categories?.maxByOrNull { category -> category.score }
-                            if (topResult != null) {
-                                Log.e("AnalyzeImage1121", "Exception123")
-                                openResultActivity(uri, topResult.label, topResult.score)
-                                Log.e("AnalyzeImage1121", "${topResult.label}")
-                            } else {
+                    override fun onResults(results: List<Classifications>?) {
+                        runOnUiThread {
+                            hideLoading()
+                            results?.let {
+                                val topResult = it.firstOrNull()?.categories?.maxByOrNull { category -> category.score }
+                                if (topResult != null) {
+                                    Log.d("AnalyzeImage", "Classification result: Label=${topResult.label}, Score=${topResult.score}")
+                                    openResultActivity(uri, topResult.label, topResult.score)
+                                } else {
+                                    Log.d("AnalyzeImage", "No classification results found.")
+                                    openResultActivity(uri, "Not found", 0.0f)
+                                }
+                            } ?: run {
+                                Log.d("AnalyzeImage", "Classification results are null.")
                                 openResultActivity(uri, "Not found", 0.0f)
                             }
-                        } ?: openResultActivity(uri, "Not found", 0.0f)
+                        }
                     }
                 }
-            }
-        )
-            Log.e("AnalyzeImage", "Exception")
-        imageClassifierHelper.classifyStaticImage(uri)
-            Log.e("AnalyzeImage", "Exception")
+            )
+            imageClassifierHelper.classifyStaticImage(uri)
         } catch (e: Exception) {
-            Log.e("AnalyzeImage", "Exception: ${e.message}", e)
+            Log.e("AnalyzeImage", "Exception during image analysis setup: ${e.message}", e)
             hideLoading()
             Toast.makeText(this, "Analyze crash: ${e.message}", Toast.LENGTH_LONG).show()
         }
@@ -192,7 +253,7 @@ class HomeActivity : BaseActivity() {
         val intent = Intent(this, ResultActivity::class.java).apply {
             putExtra(ResultActivity.EXTRA_IMAGE_URI, imageUri.toString())
             putExtra(ResultActivity.EXTRA_LABEL, label)
-            putExtra(ResultActivity.EXTRA_SCORE, score)
+//            putExtra(ResultActivity.EXTRA_SCORE, score)
         }
         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
             this, scanButton, "shared_image"

@@ -18,6 +18,7 @@ import com.example.becycle.network.AuthService
 import com.example.becycle.network.LoginRequest
 import com.example.becycle.network.RegisterRequest
 import com.example.becycle.utils.JwtUtils
+import com.example.becycle.utils.UserPreference // Import UserPreference
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -56,6 +57,9 @@ class MainActivity : BaseActivity() {
         window.statusBarColor = Color.TRANSPARENT
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         setContentView(R.layout.activity_main)
+
+        // Initialize UserPreference here
+        userPreference = UserPreference(this)
 
         loginForm = findViewById(R.id.login_form)
         signupForm = findViewById(R.id.signup_form)
@@ -103,8 +107,8 @@ class MainActivity : BaseActivity() {
         }
 
         loginButton.setOnClickListener {
-//            performLogin()
-            startActivity(Intent(this@MainActivity, HomeActivity::class.java))
+            performLogin() // Changed this back to actual login
+//            startActivity(Intent(this@MainActivity, HomeActivity::class.java)) // Remove this line
         }
 
         signupButton.setOnClickListener {
@@ -117,7 +121,13 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        showLoginForm() // Default to login
+        // Check if user is already logged in (optional, but good for app flow)
+        if (userPreference.getAccessToken() != null) {
+            startActivity(Intent(this@MainActivity, HomeActivity::class.java))
+            finish()
+        } else {
+            showLoginForm() // Default to login if not logged in
+        }
     }
 
     private fun signInWithGoogle() {
@@ -144,6 +154,12 @@ class MainActivity : BaseActivity() {
             // For example:
             // val idToken = account?.idToken
             // sendIdTokenToBackend(idToken)
+
+            // If Google Sign-In also results in your backend providing a JWT,
+            // you'd save it here using userPreference.saveAuthTokens()
+            // For now, let's assume successful Google sign-in directly leads to HomeActivity
+            startActivity(Intent(this@MainActivity, HomeActivity::class.java))
+            finish()
 
         } catch (e: ApiException) {
             Toast.makeText(this, "Google Sign-In failed: ${e.statusCode}", Toast.LENGTH_SHORT).show()
@@ -173,14 +189,13 @@ class MainActivity : BaseActivity() {
                         return
                     }
 
-                    getSharedPreferences("auth", MODE_PRIVATE).edit()
-                        .putString("access_token", authResponse.accessToken)
-                        .putString("refresh_token", authResponse.refreshToken)
-                        .putString("user_id", userId)
-                        .apply()
+                    // Use UserPreference to save tokens and user ID
+                    userPreference.saveAuthTokens(authResponse.accessToken, authResponse.refreshToken, userId)
 
                     startActivity(Intent(this@MainActivity, HomeActivity::class.java))
                     finish()
+                } else {
+                    Toast.makeText(this@MainActivity, "Login failed: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 

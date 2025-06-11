@@ -15,6 +15,7 @@ import com.example.becycle.adapters.HistoryAdapter
 import com.example.becycle.data.local.entity.HistoryEntity
 import com.example.becycle.data.misc.Result
 import com.example.becycle.model.models.MainViewModel
+import com.example.becycle.utils.UserPreference // Import UserPreference
 
 class HistoryActivity : BaseActivity() {
 
@@ -23,12 +24,16 @@ class HistoryActivity : BaseActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryAdapter
 
-    private var userId: String? = null
-    private var token: String? = null
+    // You might not need these as class members if you get them directly when needed
+    // private var userId: String? = null
+    // private var token: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
+
+        // Initialize UserPreference here
+        userPreference = UserPreference(this)
 
         val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
         val viewModel: MainViewModel by viewModels { factory }
@@ -40,33 +45,36 @@ class HistoryActivity : BaseActivity() {
 
         historyAdapter = HistoryAdapter(emptyList())
         recyclerView.adapter = historyAdapter
-        Log.e("HistoryActivity111111", "Setting adapter: $historyAdapter")
-        fetchHistory(viewModel)
+        Log.e("HistoryActivity", "Setting adapter: $historyAdapter")
+
+        // Retrieve token from UserPreference
+        val token = userPreference.getAccessToken()
+        val userId = userPreference.getUserId() // You might need userId for other specific API calls
+
+        if (token.isNullOrEmpty()) {
+            Toast.makeText(this, "User not logged in or session expired. Please log in again.", Toast.LENGTH_LONG).show()
+            // Optionally, redirect to login activity here
+            // val intent = Intent(this, MainActivity::class.java)
+            // startActivity(intent)
+            finish() // Close HistoryActivity if no token
+            return
+        }
+
+        fetchHistory(viewModel, token) // Pass the retrieved token
         Log.e("checkpoint", "babibubebo")
-        // Get user ID and token from SharedPreferences
-//        val sharedPref = getSharedPreferences("auth", MODE_PRIVATE)
-//        userId = sharedPref.getString("user_id", null)
-//        token = sharedPref.getString("token", null)
 
-//        if (userId.isNullOrEmpty() || token.isNullOrEmpty()) {
-//            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
-//            return
-//        }
+        tabScanned.setOnClickListener {
+            highlightTab(tabScanned, tabCreations)
+            fetchHistory(viewModel, token) // Pass the token here too
+        }
 
-//        setupBottomNavIfNeeded()
+        tabCreations.setOnClickListener {
+            highlightTab(tabCreations, tabScanned)
+            // If showUserCreations needs a token, pass it. Otherwise, it's fine.
+            showUserCreations()
+        }
 
-
-//        tabScanned.setOnClickListener {
-//            highlightTab(tabScanned, tabCreations)
-//            fetchHistory(viewModel)
-//        }
-//
-//        tabCreations.setOnClickListener {
-//            highlightTab(tabCreations, tabScanned)
-//            showUserCreations()
-//        }
-
-         // Load history by default
+        highlightTab(tabScanned, tabCreations) // Load history by default and highlight scanned tab
     }
 
     private fun highlightTab(selected: TextView, other: TextView) {
@@ -76,28 +84,35 @@ class HistoryActivity : BaseActivity() {
         other.setTextColor(ContextCompat.getColor(this, R.color.gray))
     }
 
-    private fun fetchHistory(viewModel: MainViewModel) {
-        viewModel.getHistory("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6ImFsdWNhcmRrYXJpbmE2MzVAZ21haWwuY29tIiwiaXNWZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzQ5MDk0MzMyLCJleHAiOjE3NDkwOTc5MzJ9.hyaFqqMcEB-YLczdbwlcp1ut_hBI7hmkm5sn3imxIns").observe(this) { result ->
+    // Modify fetchHistory to accept the token
+    private fun fetchHistory(viewModel: MainViewModel, token: String) {
+        // Use the token parameter here, not a hardcoded string
+        viewModel.getHistory(token).observe(this) { result ->
             when (result) {
                 is Result.Success -> {
-                    Log.e("HistoryActivity111111", "Result.Success, data count: ${result.data.size}")
+                    Log.e("HistoryActivity", "Result.Success, data count: ${result.data.size}")
                     historyAdapter.updateHistory(result.data)
                     if (result.data.isEmpty()) {
-                        Log.e("HistoryActivity111111", "Result.Success but list is empty")
+                        Log.e("HistoryActivity", "Result.Success but list is empty")
+                        // Optional: Show a "No history found" message
                     }
                 }
                 is Result.Loading -> {
-                    Log.e("HistoryActivity111111", "Result.Loading")
+                    Log.e("HistoryActivity", "Result.Loading")
+                    // Optional: Show a loading spinner
                 }
                 is Result.Error -> {
-                    Log.e("HistoryActivity111111", "Result.Error: ${result.error}")
-                    Toast.makeText(this, "Error: ${result.error}", Toast.LENGTH_SHORT).show()
+                    Log.e("HistoryActivity", "Result.Error: ${result.error}")
+                    Toast.makeText(this, "Error fetching history: ${result.error}", Toast.LENGTH_SHORT).show()
+                    // Optional: Hide loading spinner
                 }
             }
         }
     }
 
     private fun showUserCreations() {
-        historyAdapter.updateHistory(emptyList())
+        // This function doesn't currently make an API call, so it might not need the token directly.
+        // If "Creations" data comes from an API, you'd fetch it here, likely also needing the token.
+        historyAdapter.updateHistory(emptyList()) // Assuming this just clears the list for now
     }
 }

@@ -17,49 +17,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Becycle"
+        android:name=".MyApplication"
         tools:targetApi="31">
 
-        <activity android:name=".MyApplication" />
-        <activity android:name=".activity.HomeActivity" />
-        <activity android:name=".activity.ResultActivity" />
-        <activity android:name=".activity.IdeaDetailActivity" />
-        <activity android:name=".activity.HistoryActivity" />
-        <activity android:name=".activity.ArticleActivity" />
-        <activity android:name=".activity.EmailStatusActivity" />
-        <activity android:name=".activity.ResetPasswordActivity" />
-        <activity
-            android:name=".activity.ChangePasswordActivity"
-            android:exported="true">
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                    android:scheme="https"
-                    android:host="project-ppl-production.up.railway.app"
-                    android:pathPrefix="/auth/reset-password" />
-            </intent-filter>
-        </activity>
+    <!-- REMOVE THIS LINE: <activity android:name=".MyApplication" /> -->
 
-        <activity
-            android:name=".activity.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+    <activity android:name=".activity.HomeActivity" />
+    <activity android:name=".activity.ResultActivity" />
+    <activity android:name=".activity.IdeaDetailActivity" />
+    <activity android:name=".activity.HistoryActivity" />
+    <activity android:name=".activity.ArticleActivity" />
+    <activity android:name=".activity.EmailStatusActivity" />
+    <activity android:name=".activity.ResetPasswordActivity" />
+    <activity
+        android:name=".activity.ChangePasswordActivity"
+        android:exported="true">
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT"/>
+            <category android:name="android.intent.category.BROWSABLE"/>
+            <data
+                android:scheme="https"
+                android:host="project-ppl-production.up.railway.app"
+                android:pathPrefix="/auth/reset-password" />
+        </intent-filter>
+    </activity>
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+    <activity
+        android:name=".activity.MainActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
 
-    </application>
+    <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="${applicationId}.provider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+    </provider>
 
-</manifest>
+</application>
+
+    </manifest>

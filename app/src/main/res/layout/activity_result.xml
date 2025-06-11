@@ -5,73 +5,27 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- Top Section with green background and icons -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="240dp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/login_top_green" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
-
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_menu"
-                android:contentDescription="Menu" />
-
-            <ImageView
-                android:id="@+id/logo_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/becycle_logo"
-                android:contentDescription="BeCycle Logo" />
-
-            <ImageView
-                android:id="@+id/profile_icon"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/sample_profile"
-                android:scaleType="centerCrop"
-                android:background="@drawable/circle_background"
-                android:padding="2dp"
-                android:contentDescription="Profile" />
-        </RelativeLayout>
     </FrameLayout>
 
-    <!-- Content overlapping the top section -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
         android:layout_marginBottom="70dp"
         android:clipToPadding="false">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp">
-
                 <ImageView
                     android:id="@+id/result_image_view"
                     android:layout_width="match_parent"
@@ -106,6 +60,17 @@
                 android:paddingBottom="8dp"
                 android:textColor="#333" />
 
+<!--            <TextView-->
+<!--                android:id="@+id/detected_score"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Confidence: 0%"-->
+<!--                android:textSize="16sp"-->
+<!--                android:paddingTop="4dp"-->
+<!--                android:paddingBottom="4dp"-->
+<!--                android:textColor="#666" />-->
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,7 +78,6 @@
                 android:padding="16dp"
                 android:background="@drawable/rounded_outline">
 
-                <!-- Tabs -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -153,11 +117,20 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation pinned to bottom -->
     <include
         layout="@layout/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
+
+    <FrameLayout
+        android:id="@+id/loading_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000" android:clickable="true"    android:focusable="true"    android:visibility="gone"   android:gravity="center">  <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/white"/> </FrameLayout>
 
 </FrameLayout>

@@ -1,84 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_nav"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="70dp"
+    android:layout_gravity="bottom"
+    android:orientation="horizontal"
+    android:background="#FFFFFF"
+    android:elevation="8dp">
 
-    <!-- bottom_navigation.xml -->
     <LinearLayout
-        android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"
-        android:elevation="8dp">
-
-        <LinearLayout
-            android:id="@+id/bottom_nav_home"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home"
-                app:tint="@color/green" />
-
-            <TextView
-                android:text="Home"
-                android:textSize="12sp"
-                android:textColor="@color/green"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/bottom_nav_history"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_history"
-                app:tint="#666666" />
-
-            <TextView
-                android:text="History"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/bottom_nav_article"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_article"
-                app:tint="#666666" />
-
-            <TextView
-                android:text="Article"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+        android:id="@+id/bottom_nav_home"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingVertical="16dp"> <ImageView
+        android:id="@+id/icon_home"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/selector_home_icon" />
     </LinearLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/bottom_nav_history"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingVertical="16dp"> <ImageView
+        android:id="@+id/icon_history"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/selector_history_icon" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_nav_article"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingVertical="16dp"> <ImageView
+        android:id="@+id/icon_article"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/selector_article_icon" />
+    </LinearLayout>
+</LinearLayout>
